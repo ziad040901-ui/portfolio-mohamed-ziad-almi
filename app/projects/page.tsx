@@ -21,7 +21,7 @@ const projects = [
     description:
       "Simulation d’un système bancaire avec gestion des comptes, dépôts, retraits, transferts, historique des transactions et dashboard.",
     technologies: ["Python", "Tkinter", "JSON", "GUI"],
-    link: "#",
+    link: "/projects/banking",
   },
 ];
 

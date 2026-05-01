@@ -15,6 +15,14 @@ const projects = [
     technologies: ["Python", "Tkinter", "MySQL", "Merise", "Django"],
     link: "/projects/wms",
   },
+  {
+    title: "Banking Management System",
+    category: "Projet académique",
+    description:
+      "Simulation d’un système bancaire avec gestion des comptes, dépôts, retraits, transferts, historique des transactions et dashboard.",
+    technologies: ["Python", "Tkinter", "JSON", "GUI"],
+    link: "#",
+  },
 ];
 
 export default function ProjectsPage() {
@@ -22,10 +30,6 @@ export default function ProjectsPage() {
     <main className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-sky-100 px-6 py-20">
       <section className="mx-auto max-w-6xl">
         <div className="mb-16 text-center">
-          <p className="mb-3 text-sm font-semibold uppercase tracking-[0.3em] text-blue-600">
-            Portfolio personnel
-          </p>
-
           <h1 className="text-5xl font-extrabold text-slate-900">
             Mes projets
           </h1>

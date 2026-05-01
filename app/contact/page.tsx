@@ -3,20 +3,35 @@ export default function Contact() {
     <section className="bg-slate-900 px-6 py-20">
       <div className="mx-auto grid max-w-6xl gap-8 md:grid-cols-2">
         
+        {/* Infos */}
         <div className="rounded-3xl bg-slate-950 p-8 text-white">
           <h2 className="mb-6 text-2xl font-bold">Informations</h2>
 
           <p>Email : ziad040901@gmail.com</p>
           <p>Téléphone : +212 7 67 30 71 04</p>
           <p>Localisation : Casablanca, Maroc</p>
-          <p>LinkedIn : Mohamed Ziad Almi</p>
+
+          <p>
+            LinkedIn :{" "}
+            <a
+              href="https://www.linkedin.com/in/mohamed-ziad-almi"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-400 hover:underline"
+            >
+              Mohamed Ziad Almi
+            </a>
+          </p>
         </div>
 
+        {/* Formulaire */}
         <form
           action="https://formspree.io/f/xpqbwpwo"
           method="POST"
           className="rounded-3xl bg-slate-950 p-8"
         >
+          <input type="hidden" name="_captcha" value="false" />
+
           <input
             type="text"
             name="name"

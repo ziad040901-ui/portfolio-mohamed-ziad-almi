@@ -5,6 +5,9 @@ import ThemeProvider from "@/components/ThemeProvider";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
+/* ✅ AJOUT IMPORTANT */
+import { Analytics } from "@vercel/analytics/react";
+
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800"],
@@ -23,11 +26,16 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fr" suppressHydrationWarning>
-      <body className={`${poppins.className} bg-white text-slate-900 dark:bg-slate-950 dark:text-white`}>
+      <body
+        className={`${poppins.className} bg-white text-slate-900 dark:bg-slate-950 dark:text-white`}
+      >
         <ThemeProvider>
           <Navbar />
           {children}
           <Footer />
+
+          {/* ✅ TRACKING VISITEURS */}
+          <Analytics />
         </ThemeProvider>
       </body>
     </html>

@@ -35,7 +35,7 @@ export default function Hero() {
           </Link>
 
           <Link
-            href="/cv.pdf"
+            href="/CV.pdf"
             className="rounded-2xl border-2 border-blue-500 px-7 py-4 font-semibold text-blue-300 transition hover:-translate-y-1 hover:bg-blue-950"
           >
             Télécharger mon CV ↓

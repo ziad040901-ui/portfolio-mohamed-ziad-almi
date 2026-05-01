@@ -39,6 +39,15 @@ export const projects: Project[] = [
     category: "Personnel",
     github: "#",
   },
+  {
+    id: 3,
+    title: "Banking Management System",
+    description:
+      "Simulation complète d’un système bancaire avec gestion des comptes, transactions, historique, relevés de compte et dashboard avec statistiques.",
+    tags: ["Python", "Tkinter", "JSON", "GUI"],
+    category: "Académique",
+    github: "#",
+  },
 ];
 
 export const skills: Skill[] = [

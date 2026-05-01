@@ -3,7 +3,6 @@ export default function Contact() {
     <section className="bg-slate-900 px-6 py-20">
       <div className="mx-auto grid max-w-6xl gap-8 md:grid-cols-2">
         
-        {/* Infos */}
         <div className="rounded-3xl bg-slate-950 p-8 text-white">
           <h2 className="mb-6 text-2xl font-bold">Informations</h2>
 
@@ -13,7 +12,6 @@ export default function Contact() {
           <p>LinkedIn : Mohamed Ziad Almi</p>
         </div>
 
-        {/* Formulaire */}
         <form
           action="https://formspree.io/f/xpqbwpwo"
           method="POST"

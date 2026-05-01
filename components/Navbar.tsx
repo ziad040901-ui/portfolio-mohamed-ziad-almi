@@ -33,12 +33,12 @@ export default function Navbar() {
             link.isPdf ? (
               <a
                 key={link.label}
-                href={link.href}
+                href="/CV.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="relative text-sm font-semibold text-slate-200 transition hover:text-[#2979FF]"
               >
-                {link.label}
+                CV
               </a>
             ) : (
               <Link
@@ -76,13 +76,13 @@ export default function Navbar() {
               link.isPdf ? (
                 <a
                   key={link.label}
-                  href={link.href}
+                  href="/CV.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => setIsOpen(false)}
                   className="text-slate-200"
                 >
-                  {link.label}
+                  CV
                 </a>
               ) : (
                 <Link

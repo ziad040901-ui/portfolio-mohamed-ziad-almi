@@ -8,7 +8,7 @@ const links = [
   { href: "/", label: "Accueil" },
   { href: "/about", label: "À propos" },
   { href: "/projects", label: "Projets" },
-  { href: "/cv.pdf", label: "CV" },
+  { href: "/CV.pdf", label: "CV", isPdf: true },
   { href: "/contact", label: "Contact" },
 ];
 
@@ -29,26 +29,34 @@ export default function Navbar() {
         </Link>
 
         <div className="hidden items-center gap-6 md:flex">
-          {links.map((link) => {
-            const isActive = pathname === link.href;
-
-            return (
+          {links.map((link) =>
+            link.isPdf ? (
+              <a
+                key={link.label}
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="relative text-sm font-semibold text-slate-200 transition hover:text-[#2979FF]"
+              >
+                {link.label}
+              </a>
+            ) : (
               <Link
                 key={link.label}
                 href={link.href}
                 className={`relative text-sm font-semibold transition ${
-                  isActive
+                  pathname === link.href
                     ? "text-[#2979FF]"
                     : "text-slate-200 hover:text-[#2979FF]"
                 }`}
               >
                 {link.label}
-                {isActive && (
+                {pathname === link.href && (
                   <span className="absolute -bottom-2 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-[#2979FF]" />
                 )}
               </Link>
-            );
-          })}
+            )
+          )}
         </div>
 
         <button
@@ -64,16 +72,29 @@ export default function Navbar() {
       {isOpen && (
         <div className="border-t border-slate-800 bg-slate-950 px-6 py-4 md:hidden">
           <div className="flex flex-col gap-4">
-            {links.map((link) => (
-              <Link
-                key={link.label}
-                href={link.href}
-                onClick={() => setIsOpen(false)}
-                className="text-slate-200"
-              >
-                {link.label}
-              </Link>
-            ))}
+            {links.map((link) =>
+              link.isPdf ? (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setIsOpen(false)}
+                  className="text-slate-200"
+                >
+                  {link.label}
+                </a>
+              ) : (
+                <Link
+                  key={link.label}
+                  href={link.href}
+                  onClick={() => setIsOpen(false)}
+                  className="text-slate-200"
+                >
+                  {link.label}
+                </Link>
+              )
+            )}
           </div>
         </div>
       )}

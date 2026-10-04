@@ -21,15 +21,19 @@ export default function ChiffresCles() {
             return (
               <CascadeItem key={chiffre.slug}>
                 <Card padded={false} className="flex h-full flex-col gap-3 p-5 sm:p-6">
-                <span className="flex size-10 items-center justify-center rounded-button bg-accent/15 text-accent-strong">
-                  <Icone className="size-5" aria-hidden="true" />
-                </span>
-                <p>
-                  <span className="block font-heading text-3xl font-bold text-foreground sm:text-4xl">
-                    {chiffre.valeur}
+                  <span className="flex size-10 items-center justify-center rounded-button bg-accent/15 text-accent-strong">
+                    <Icone className="size-5" aria-hidden="true" />
                   </span>
-                  <span className="text-sm text-muted-foreground sm:text-base">{chiffre.label}</span>
-                </p>
+                  <p>
+                    <span className="block font-heading text-3xl font-bold text-foreground sm:text-4xl">
+                      {chiffre.valeur}
+                    </span>
+                    <span className="text-sm text-muted-foreground sm:text-base">{chiffre.label}</span>
+                    {/* Ex. « dont 2 professionnelles » : calculé depuis lib/data.ts */}
+                    {chiffre.detail && (
+                      <span className="mt-0.5 block text-xs text-muted-foreground sm:text-sm">{chiffre.detail}</span>
+                    )}
+                  </p>
                 </Card>
               </CascadeItem>
             );

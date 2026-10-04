@@ -1,4 +1,4 @@
-import type { DateISO } from "@/lib/data";
+import type { DateISO, MoisISO } from "@/lib/data";
 
 // timeZone UTC : une date ISO « 2024-05-01 » ne doit pas devenir « avril » selon le fuseau du serveur
 const moisAnnee = new Intl.DateTimeFormat("fr-FR", {
@@ -18,8 +18,8 @@ const moisLongAnnee = new Intl.DateTimeFormat("fr-FR", {
   timeZone: "UTC",
 });
 
-/** « 2026-09-27 » → « septembre 2026 » */
-export function formatMoisAnnee(date: DateISO) {
+/** « 2026-09 » ou « 2026-09-27 » → « septembre 2026 » */
+export function formatMoisAnnee(date: DateISO | MoisISO) {
   return moisLongAnnee.format(new Date(date));
 }
 

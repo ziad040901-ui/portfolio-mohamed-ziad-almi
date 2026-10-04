@@ -161,12 +161,6 @@
     @apply bg-accent text-accent-foreground;
   }
 
-  /* Animations framer-motion (composants components/motion) : si l'utilisateur
-     réduit les animations, état final immédiat — !important l'emporte sur les styles inline */
-  @media (prefers-reduced-motion: reduce) {
-    [data-apparition] {
-      opacity: 1 !important;
-      transform: none !important;
-    }
-  }
+  /* Visibilité des éléments animés ([data-apparition]) : règles inline dans le <head>
+     (components/motion/demarrage.ts), pour fonctionner même si ce fichier CSS ne charge pas. */
 }

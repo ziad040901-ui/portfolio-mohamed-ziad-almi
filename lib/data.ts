@@ -13,6 +13,9 @@
 /** Date au format ISO AAAA-MM-JJ */
 export type DateISO = `${number}-${number}-${number}`;
 
+/** Mois au format ISO AAAA-MM */
+export type MoisISO = `${number}-${number}`;
+
 export type Profil = {
   nom: string;
   titre: string;
@@ -85,15 +88,24 @@ export type CategorieCertification =
   | "Supply Chain & Gestion"
   | "Data & Analyse"
   | "Développement"
+  | "Intelligence artificielle"
   | "E-commerce & Marketing";
+
+/**
+ * "professionnel" : certificat professionnel (parcours de plusieurs cours, mis en avant) ;
+ * "cours" : certificat d'un cours.
+ */
+export type TypeCertification = "professionnel" | "cours";
 
 export type Certification = {
   titre: string;
+  type: TypeCertification;
   organisme: string;
   plateforme: "Coursera";
   categorie: CategorieCertification;
-  /** Date d'obtention (vide si inconnue) */
-  date: DateISO | "";
+  /** Mois d'obtention */
+  date: MoisISO;
+  /** Page de vérification (cours) ou badge (certificat professionnel) */
   lienVerification: string;
   competences: string[];
 };
@@ -161,6 +173,8 @@ export type ChiffreCle = {
   slug: "stages" | "certifications" | "langues" | "niveau";
   valeur: string;
   label: string;
+  /** Précision affichée sous le libellé (ex. « dont 2 professionnelles ») */
+  detail?: string;
 };
 
 // ===================================================================
@@ -392,12 +406,12 @@ export const competences: CategorieCompetence[] = [
   {
     slug: "data-digital",
     titre: "Data & Digital",
-    items: ["TMS", "WMS", "Excel", "Power BI", "Python", "SQL / MySQL", "Merise"],
+    items: ["TMS", "WMS", "Excel", "Power BI", "Python", "SQL / MySQL", "Merise", "Intelligence artificielle"],
   },
   {
     slug: "developpement",
     titre: "Développement",
-    items: ["Python", "Django", "JavaScript", "HTML/CSS", "Next.js", "Tkinter"],
+    items: ["Python", "Django", "APIs REST", "JavaScript", "HTML/CSS", "Next.js", "Tkinter"],
   },
   {
     slug: "gestion",
@@ -433,111 +447,200 @@ export const categoriesCertification: CategorieCertification[] = [
   "Supply Chain & Gestion",
   "Data & Analyse",
   "Développement",
+  "Intelligence artificielle",
   "E-commerce & Marketing",
 ];
 
+/** Données vérifiées depuis le compte Coursera */
 export const certifications: Certification[] = [
   {
+    titre: "Meta Back-End Developer",
+    type: "professionnel",
+    organisme: "Meta",
+    plateforme: "Coursera",
+    categorie: "Développement",
+    date: "2026-03",
+    lienVerification: "https://www.coursera.org/account/accomplishments/badge/5u7OYVINRIquzmFSDbSKQg",
+    competences: ["Développement back-end", "Python", "Django", "APIs REST", "Bases de données"],
+  },
+  {
+    titre: "IBM AI Developer",
+    type: "professionnel",
+    organisme: "IBM",
+    plateforme: "Coursera",
+    categorie: "Intelligence artificielle",
+    date: "2025-10",
+    lienVerification: "https://www.coursera.org/account/accomplishments/badge/_m5k9TjRTAquZPU40fwKEA",
+    competences: ["Intelligence artificielle", "Python", "Applications IA"],
+  },
+  {
     titre: "Supply Chain Excellence",
+    type: "cours",
     organisme: "Rutgers University",
     plateforme: "Coursera",
     categorie: "Supply Chain & Gestion",
-    // TODO: date d'obtention et lien de vérification
-    date: "",
-    lienVerification: "",
+    date: "2024-10",
+    lienVerification: "https://www.coursera.org/account/accomplishments/verify/YNJZDZK5TCOV",
     competences: ["Supply chain", "Planification", "Optimisation"],
   },
   {
     titre: "Foundations of Project Management",
+    type: "cours",
     organisme: "Google",
     plateforme: "Coursera",
     categorie: "Supply Chain & Gestion",
-    // TODO: date d'obtention et lien de vérification
-    date: "",
-    lienVerification: "",
+    date: "2024-10",
+    lienVerification: "https://www.coursera.org/account/accomplishments/verify/J8BYCJBQJMI0",
     competences: ["Gestion de projet", "Planification"],
   },
   {
-    titre: "Excel Skills for Business: Essentials",
-    organisme: "Macquarie University",
+    titre: "Data Analysis and Visualization with Power BI",
+    type: "cours",
+    organisme: "Microsoft",
     plateforme: "Coursera",
     categorie: "Data & Analyse",
-    // TODO: date d'obtention et lien de vérification
-    date: "",
-    lienVerification: "",
-    competences: ["Excel", "Formules", "Analyse de données"],
+    date: "2026-09",
+    lienVerification: "https://www.coursera.org/account/accomplishments/verify/PUPCHV0PNP6F",
+    competences: ["Power BI", "Analyse de données", "Visualisation de données"],
   },
   {
     titre: "Analysis and Visualization of Data with Power BI",
-    // TODO: organisme à vérifier
-    organisme: "",
+    type: "cours",
+    organisme: "Microsoft",
     plateforme: "Coursera",
     categorie: "Data & Analyse",
-    // TODO: date d'obtention et lien de vérification
-    date: "",
-    lienVerification: "",
+    date: "2026-09",
+    lienVerification: "https://www.coursera.org/account/accomplishments/verify/QTK2580S44NS",
     competences: ["Power BI", "Visualisation de données", "Tableaux de bord"],
   },
   {
     titre: "Python for Data Science, AI & Development",
+    type: "cours",
     organisme: "IBM",
     plateforme: "Coursera",
     categorie: "Data & Analyse",
-    // TODO: date d'obtention et lien de vérification
-    date: "",
-    lienVerification: "",
-    competences: ["Python", "Pandas", "Analyse de données"],
+    date: "2024-10",
+    lienVerification: "https://www.coursera.org/account/accomplishments/verify/XV0OROHE74EM",
+    competences: ["Python", "Data science", "Analyse de données"],
   },
   {
-    titre: "Introduction to Databases for Back-End Development",
+    titre: "Excel Skills for Business: Essentials",
+    type: "cours",
+    organisme: "Macquarie University",
+    plateforme: "Coursera",
+    categorie: "Data & Analyse",
+    date: "2024-10",
+    lienVerification: "https://www.coursera.org/account/accomplishments/verify/I730MBC5E63C",
+    competences: ["Excel", "Formules", "Analyse de données"],
+  },
+  {
+    titre: "APIs",
+    type: "cours",
     organisme: "Meta",
     plateforme: "Coursera",
     categorie: "Développement",
-    // TODO: date d'obtention et lien de vérification
-    date: "",
-    lienVerification: "",
-    competences: ["Bases de données", "SQL", "MySQL"],
-  },
-  {
-    titre: "Programming with JavaScript",
-    organisme: "Meta",
-    plateforme: "Coursera",
-    categorie: "Développement",
-    // TODO: date d'obtention et lien de vérification
-    date: "",
-    lienVerification: "",
-    competences: ["JavaScript"],
-  },
-  {
-    titre: "HTML and CSS in depth",
-    organisme: "Meta",
-    plateforme: "Coursera",
-    categorie: "Développement",
-    // TODO: date d'obtention et lien de vérification
-    date: "",
-    lienVerification: "",
-    competences: ["HTML", "CSS"],
+    date: "2026-04",
+    lienVerification: "https://www.coursera.org/account/accomplishments/verify/T4LBXRKW3N71",
+    competences: ["APIs REST", "Développement back-end"],
   },
   {
     titre: "Django Web Framework",
+    type: "cours",
     organisme: "Meta",
     plateforme: "Coursera",
     categorie: "Développement",
-    // TODO: date d'obtention et lien de vérification
-    date: "",
-    lienVerification: "",
+    date: "2026-04",
+    lienVerification: "https://www.coursera.org/account/accomplishments/verify/UH5RYIJ7PII4",
     competences: ["Django", "Python", "Développement web"],
   },
   {
+    titre: "Programming with JavaScript",
+    type: "cours",
+    organisme: "Meta",
+    plateforme: "Coursera",
+    categorie: "Développement",
+    date: "2026-03",
+    lienVerification: "https://www.coursera.org/account/accomplishments/verify/KIYXP3FA67ZN",
+    competences: ["JavaScript"],
+  },
+  {
+    titre: "Introduction to Front-End Development",
+    type: "cours",
+    organisme: "Meta",
+    plateforme: "Coursera",
+    categorie: "Développement",
+    date: "2026-03",
+    lienVerification: "https://www.coursera.org/account/accomplishments/verify/FQ7VG722L45M",
+    competences: ["Développement front-end", "HTML", "CSS"],
+  },
+  {
+    titre: "Introduction to Back-End Development",
+    type: "cours",
+    organisme: "Meta",
+    plateforme: "Coursera",
+    categorie: "Développement",
+    date: "2026-03",
+    lienVerification: "https://www.coursera.org/account/accomplishments/verify/XAXO6NR4OK20",
+    competences: ["Développement back-end", "Développement web"],
+  },
+  {
+    titre: "HTML and CSS in depth",
+    type: "cours",
+    organisme: "Meta",
+    plateforme: "Coursera",
+    categorie: "Développement",
+    date: "2026-03",
+    lienVerification: "https://www.coursera.org/account/accomplishments/verify/Q805WP898HDQ",
+    competences: ["HTML", "CSS"],
+  },
+  {
+    titre: "Programming in Python",
+    type: "cours",
+    organisme: "Meta",
+    plateforme: "Coursera",
+    categorie: "Développement",
+    date: "2025-11",
+    lienVerification: "https://www.coursera.org/account/accomplishments/verify/T2UKCBOJ6B1D",
+    competences: ["Python", "Programmation"],
+  },
+  {
+    titre: "Introduction to Databases for Back-End Development",
+    type: "cours",
+    organisme: "Meta",
+    plateforme: "Coursera",
+    categorie: "Développement",
+    date: "2025-10",
+    lienVerification: "https://www.coursera.org/account/accomplishments/verify/9TJKEAXLZRZB",
+    competences: ["Bases de données", "SQL", "MySQL"],
+  },
+  {
+    titre: "Introduction to Artificial Intelligence (AI)",
+    type: "cours",
+    organisme: "IBM",
+    plateforme: "Coursera",
+    categorie: "Intelligence artificielle",
+    date: "2025-10",
+    lienVerification: "https://www.coursera.org/account/accomplishments/verify/LW8U2ZJYLTYJ",
+    competences: ["Intelligence artificielle", "Notions d'IA"],
+  },
+  {
     titre: "Foundations of Digital Marketing and E-commerce",
+    type: "cours",
     organisme: "Google",
     plateforme: "Coursera",
     categorie: "E-commerce & Marketing",
-    // TODO: date d'obtention et lien de vérification
-    date: "",
-    lienVerification: "",
+    date: "2024-10",
+    lienVerification: "https://www.coursera.org/account/accomplishments/verify/T8XF64W5Y5TB",
     competences: ["Marketing digital", "E-commerce"],
   },
+];
+
+/** Certificats de cours affichés sur l'accueil (en plus des certificats professionnels), dans cet ordre */
+export const certificationsCoursAccueil = [
+  "Supply Chain Excellence",
+  "Data Analysis and Visualization with Power BI",
+  "Python for Data Science, AI & Development",
+  "Excel Skills for Business: Essentials",
 ];
 
 // ===================================================================
@@ -827,10 +930,16 @@ export const projets: Projet[] = [
 // ===================================================================
 
 const formationEnCours = formations.find((f) => f.enCours);
+const nombreCertificatsProfessionnels = certifications.filter((c) => c.type === "professionnel").length;
 
 export const chiffresCles: ChiffreCle[] = [
   { slug: "stages", valeur: String(experiences.length), label: "stages" },
-  { slug: "certifications", valeur: String(certifications.length), label: "certifications" },
+  {
+    slug: "certifications",
+    valeur: String(certifications.length),
+    label: "certifications",
+    detail: `dont ${nombreCertificatsProfessionnels} professionnelle${nombreCertificatsProfessionnels > 1 ? "s" : ""}`,
+  },
   { slug: "langues", valeur: String(langues.length), label: "langues" },
   { slug: "niveau", valeur: formationEnCours?.niveau ?? "Bac+5", label: "en cours" },
 ];
@@ -921,7 +1030,7 @@ export const seo = {
     certifications: {
       titre: "Certifications",
       description:
-        "Certifications Coursera de Mohamed Ziad Almi en supply chain, gestion de projet, data (Excel, Power BI, Python) et développement web, avec liens de vérification.",
+        "Certifications Coursera de Mohamed Ziad Almi : certificats professionnels Meta Back-End Developer et IBM AI Developer, supply chain, gestion de projet, data (Excel, Power BI, Python), développement web et intelligence artificielle, avec liens de vérification.",
     },
     parcours: {
       titre: "Mon parcours",
@@ -1078,14 +1187,27 @@ export const ui = {
     eyebrow: "Formation continue",
     titre: "Certifications",
     sousTitre:
-      "Des formations en ligne qui complètent mon Master E-Logistique : analyse de données, développement et gestion de projet, au service de la supply chain.",
+      "Des formations en ligne qui complètent mon Master E-Logistique : analyse de données, intelligence artificielle, développement et gestion de projet, au service de la supply chain.",
+    professionnels: {
+      titre: "Certificats professionnels",
+      sousTitre: "Des parcours complets de plusieurs cours, délivrés par Meta et IBM.",
+    },
+    cours: {
+      titre: "Certificats de cours",
+      sousTitre: "Du plus récent au plus ancien.",
+    },
+    badgeProfessionnel: "Certificat professionnel",
     filtresLabel: "Filtrer par catégorie",
     toutes: "Toutes",
     /** Annonce lecteur d'écran après un changement de filtre */
     resultatSingulier: "certification affichée",
     resultatPluriel: "certifications affichées",
     verifier: "Vérifier le certificat",
-    verifierAriaLabel: (titre: string) => `Vérifier le certificat « ${titre} » (nouvel onglet)`,
+    voirBadge: "Voir le badge",
+    /** « Vérifier le certificat Supply Chain Excellence sur Coursera (nouvel onglet) » */
+    lienAriaLabel: (action: string, titre: string, plateforme: string) =>
+      `${action} ${titre} sur ${plateforme} (nouvel onglet)`,
+    nouvelOnglet: "(nouvel onglet)",
     obtenue: (date: string) => `Obtenue en ${date}`,
   },
 

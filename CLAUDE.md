@@ -29,7 +29,7 @@
 
 ## Animations
 - `framer-motion` uniquement via les composants client de `components/motion/` (`Apparition`, `Cascade` / `CascadeItem`) et `Timeline` ; les pages restent des composants serveur et leur passent le contenu en `children`.
-- Tout élément animé porte `data-apparition` : la règle CSS associée garantit l'état final immédiat si `prefers-reduced-motion: reduce` (et sans JavaScript, via `<noscript>`).
+- Tout élément animé porte `data-apparition`. **Le contenu doit rester visible si le JavaScript échoue** : l'état caché ne s'applique que si `<html>` a la classe `anim` (ajoutée par un script inline du `<head>`), et un filet de sécurité retire cette classe après 2 s si React / framer-motion ne sont pas prêts. Tout est décrit dans `components/motion/demarrage.ts` ; ne jamais cacher du contenu par défaut dans le HTML serveur.
 - Animations sobres (fondu + léger glissement, une seule fois) ; pas d'animation sur le contenu au-dessus de la ligne de flottaison (hero, en-têtes de page).
 
 ## Next.js / React

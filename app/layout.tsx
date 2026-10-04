@@ -7,6 +7,7 @@ import ThemeProvider from "@/components/ThemeProvider";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import MotionProvider from "@/components/motion/MotionProvider";
+import { SCRIPT_DEMARRAGE, STYLE_DEMARRAGE } from "@/components/motion/demarrage";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -57,13 +58,12 @@ export default function RootLayout({
       className={`${inter.variable} ${spaceGrotesk.variable}`}
       suppressHydrationWarning
     >
+      <head>
+        {/* Contenu animé visible par défaut ; animations activées seulement si le JS démarre (voir demarrage.ts) */}
+        <style dangerouslySetInnerHTML={{ __html: STYLE_DEMARRAGE }} />
+        <script dangerouslySetInnerHTML={{ __html: SCRIPT_DEMARRAGE }} />
+      </head>
       <body className="flex min-h-dvh flex-col">
-        {/* Sans JavaScript, les éléments animés ne doivent pas rester invisibles */}
-        <noscript
-          dangerouslySetInnerHTML={{
-            __html: "<style>[data-apparition]{opacity:1!important;transform:none!important}</style>",
-          }}
-        />
         <a
           href="#contenu"
           className="sr-only rounded-button bg-accent px-4 py-2 font-semibold text-accent-foreground focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[60]"

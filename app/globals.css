@@ -1,1 +1,172 @@
 @import "tailwindcss";
+
+/* Mode sombre piloté par next-themes (classe .dark sur <html>) */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ------------------------------------------------------------------ */
+/* Tokens sémantiques — seul endroit où les couleurs sont définies     */
+/* ------------------------------------------------------------------ */
+
+:root {
+  --background: #f8fafc;
+  --foreground: #0f172a;
+
+  --muted: #f1f5f9;
+  --muted-foreground: #475569;
+
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+
+  --border: #e2e8f0;
+  /* Bordure des champs de formulaire : ≥ 3:1 (WCAG 1.4.11) */
+  --input: #7c8aa0;
+
+  /* Bleu marine du CV */
+  --primary: #1b2a41;
+  --primary-foreground: #ffffff;
+
+  /* Orange « conteneur » : en fond, texte marine (contraste ≈ 6:1) */
+  --accent: #f28c28;
+  --accent-foreground: #1b2a41;
+  /* Variante lisible de l'accent pour du texte sur fond clair (≥ 4.5:1) */
+  --accent-strong: #b45309;
+
+  /* Statut positif (ex. « Disponible ») */
+  --success: #15803d;
+  /* Erreur (formulaires) */
+  --danger: #b91c1c;
+
+  --ring: #1b2a41;
+  --shadow-color: 215 40% 17%;
+}
+
+:root.dark {
+  --background: #0b1220;
+  --foreground: #f1f5f9;
+
+  --muted: #16213a;
+  --muted-foreground: #94a3b8;
+
+  --card: #111b2e;
+  --card-foreground: #f1f5f9;
+
+  --border: #23314b;
+  --input: #64748b;
+
+  --primary: #3b5478;
+  --primary-foreground: #ffffff;
+
+  --accent: #f28c28;
+  --accent-foreground: #1b2a41;
+  --accent-strong: #f5a54f;
+
+  --success: #22c55e;
+  --danger: #f87171;
+
+  --ring: #f28c28;
+  --shadow-color: 220 60% 3%;
+}
+
+/* ------------------------------------------------------------------ */
+/* Exposition des tokens à Tailwind                                    */
+/* ------------------------------------------------------------------ */
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent-strong: var(--accent-strong);
+  --color-success: var(--success);
+  --color-danger: var(--danger);
+  --color-ring: var(--ring);
+
+  /* Polices chargées par next/font dans app/layout.tsx */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-space-grotesk), var(--font-inter), ui-sans-serif,
+    system-ui, sans-serif;
+
+  /* Ombres (teinte adaptée au thème) */
+  --shadow-card: 0 1px 2px hsl(var(--shadow-color) / 0.06),
+    0 4px 12px hsl(var(--shadow-color) / 0.06);
+  --shadow-card-hover: 0 2px 4px hsl(var(--shadow-color) / 0.08),
+    0 12px 28px hsl(var(--shadow-color) / 0.12);
+}
+
+@theme {
+  /* Rayons */
+  --radius-button: 0.75rem;
+  --radius-card: 1.25rem;
+
+  /* Espacements de mise en page */
+  --spacing-section: clamp(4rem, 8vw, 7rem);
+  --spacing-header: 4.5rem;
+
+  /* Largeur du contenu */
+  --container-content: 72rem;
+
+  /* Flux qui circulent sur les routes du motif de fond (hero) */
+  --animate-flow: flow 2.5s linear infinite;
+
+  @keyframes flow {
+    to {
+      stroke-dashoffset: -24;
+    }
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Base                                                                */
+/* ------------------------------------------------------------------ */
+
+@layer base {
+  html {
+    color-scheme: light;
+  }
+
+  html.dark {
+    color-scheme: dark;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  body {
+    @apply bg-background font-sans text-foreground antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-heading tracking-tight text-balance;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-ring;
+  }
+
+  ::selection {
+    @apply bg-accent text-accent-foreground;
+  }
+
+  /* Animations framer-motion (composants components/motion) : si l'utilisateur
+     réduit les animations, état final immédiat — !important l'emporte sur les styles inline */
+  @media (prefers-reduced-motion: reduce) {
+    [data-apparition] {
+      opacity: 1 !important;
+      transform: none !important;
+    }
+  }
+}

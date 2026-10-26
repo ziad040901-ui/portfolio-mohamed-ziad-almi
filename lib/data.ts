@@ -129,11 +129,65 @@ export type CaracteristiqueProjet = {
   valeur: string;
 };
 
+/**
+ * Capture d'écran d'un projet. Facultatif : les images déposées dans
+ * public/images/projets/<slug>/ sont détectées automatiquement (lib/images-projet.ts).
+ * Les déclarer ici sert seulement à personnaliser alt et légende (prioritaire sur le dossier).
+ */
 export type ImageProjet = {
-  /** Chemin dans public/ */
+  /** Chemin dans public/, ex. "/images/projets/tms-sntl/01-tableau-de-bord.png" */
   src: string;
   alt: string;
   legende?: string;
+};
+
+/** Indicateur mesuré avant / après (section « Les chiffres clés ») */
+export type ChiffreAvantApres = {
+  label: string;
+  avant: string;
+  apres: string;
+  /** Gain mis en valeur, ex. « −90 % » */
+  gain: string;
+};
+
+/** Chiffre court affiché sur la carte du projet, ex. { valeur: "−90 %", label: "de temps de dispatch" } */
+export type ChiffreCarte = {
+  valeur: string;
+  label: string;
+};
+
+/** Portail / espace d'une application (ex. Portail Client) */
+export type PortailProjet = {
+  titre: string;
+  /** Public visé, ex. « Pour les clients de la SNTL » */
+  public: string;
+  items: string[];
+  /** Rôles utilisateurs de cet espace (comptés dans le titre de section) */
+  roles?: string[];
+};
+
+/** Groupe de fonctionnalités (accordéon « Fonctionnalités par module ») */
+export type ModuleProjet = {
+  titre: string;
+  items: string[];
+};
+
+/** Processus métier affiché en frise */
+export type ProcessusProjet = {
+  titre: string;
+  description?: string;
+  etapes: string[];
+};
+
+export type PhasePDCA = {
+  phase: "Plan" | "Do" | "Check" | "Act";
+  titre: string;
+  items: string[];
+};
+
+export type GroupeListe = {
+  titre: string;
+  items: string[];
 };
 
 export type Projet = {
@@ -162,6 +216,24 @@ export type Projet = {
   images: ImageProjet[];
   lienGithub: string;
   lienDemo: string;
+
+  // ---- Étude de cas détaillée (facultatif : chaque section est masquée si le champ est absent ou vide)
+  /** Rôle tenu, ex. « Chef de projet et développeur » */
+  role?: string;
+  /** Période, ex. « 23 juin – 31 juillet 2026 » */
+  periode?: string;
+  /** Points détaillés sous « Problème » */
+  problemePoints?: string[];
+  /** 2 chiffres affichés sur la carte du projet (accueil, /projects) */
+  chiffresCarte?: ChiffreCarte[];
+  chiffres?: ChiffreAvantApres[];
+  portails?: PortailProjet[];
+  modules?: ModuleProjet[];
+  processus?: ProcessusProjet[];
+  documents?: string[];
+  kpis?: GroupeListe[];
+  securite?: string[];
+  pdca?: PhasePDCA[];
 };
 
 export type LienNavigation = {
@@ -652,6 +724,297 @@ export const categoriesProjet: CategorieProjet[] = ["Professionnel", "Académiqu
 
 export const projets: Projet[] = [
   {
+    slug: "tms-sntl",
+    titre: "TMS — Transport Management System",
+    categorie: "Professionnel",
+    contexte: "Stage d'application — SNTL, Agadir",
+    role: "Chef de projet et développeur (conception, développement, tests, mise en production)",
+    periode: "23 juin – 31 juillet 2026",
+    featured: true,
+    resume:
+      "TMS web qui digitalise tout le flux de transport de la SNTL Agadir, de la commande client jusqu'au règlement.",
+    description:
+      "Conception et développement d'un TMS web complet qui digitalise tout le flux de transport de la SNTL Agadir, de la commande client jusqu'au règlement, avec suivi en temps réel, documents générés automatiquement et pilotage par KPI.",
+    chiffresCarte: [
+      { valeur: "−90 %", label: "de temps de dispatch" },
+      { valeur: "12", label: "documents automatisés" },
+    ],
+    probleme:
+      "Un processus de transport 100 % manuel, sans suivi en temps réel ni mesure de la performance.",
+    problemePoints: [
+      "Commandes reçues par mail et WhatsApp, Bons de Transport remplis à la main puis ressaisis au retour des chauffeurs.",
+      "Volume : 30 camions par jour (jusqu'à 70 en pic), 900 à 1 000 BT par mois, 29 chauffeurs, 10 transporteurs, 24 destinations du Sud du Maroc.",
+      "Aucun suivi en temps réel, retour documentaire non tracé, affectation des camions calculée de tête, KPIs officiels impossibles à mesurer.",
+    ],
+    solution:
+      "Une application web avec 3 portails connectés à une base de données unique : chaque acteur (client, chauffeur, équipe SNTL) travaille sur les mêmes données, à jour en temps réel, du dépôt de la commande jusqu'au règlement.",
+    resultat: "",
+    chiffres: [
+      { label: "Dispatch d'une commande", avant: "15-20 min", apres: "< 2 min", gain: "−90 %" },
+      { label: "Création d'un BT", avant: "20-40 s", apres: "< 2 s, automatique", gain: "−95 %" },
+      { label: "Ressaisie des BT", avant: "Systématique", apres: "Supprimée (scan QR)", gain: "0 ressaisie" },
+      { label: "Traçabilité des BT", avant: "0 %", apres: "100 %", gain: "100 %" },
+      { label: "Documents générés automatiquement", avant: "0", apres: "12 sur 12", gain: "12 / 12" },
+      { label: "Recherche d'une information", avant: "> 5 min", apres: "< 3 s", gain: "−99 %" },
+      { label: "KPIs officiels mesurables", avant: "0", apres: "4 sur 4", gain: "4 / 4" },
+      { label: "Étapes du processus digitalisées", avant: "0", apres: "8 sur 8", gain: "8 / 8" },
+      { label: "Types de véhicules gérés", avant: "2", apres: "9", gain: "+7" },
+    ],
+    portails: [
+      {
+        titre: "Portail Client",
+        public: "Pour les clients de la SNTL",
+        items: [
+          "Commande en ligne",
+          "Suivi en temps réel, étape par étape",
+          "Confirmation de réception : conforme ou anomalie avec photos",
+          "Évaluation de la livraison",
+          "Annulation et déclaration de paiement",
+          "Statistiques et recommande en un clic",
+        ],
+      },
+      {
+        titre: "Portail Chauffeur",
+        public: "Bilingue français / arabe, interface RTL",
+        items: [
+          "Missions et cycle de transport en 8 étapes",
+          "Signalement d'incident et scan du QR code",
+          "Itinéraire : distance, pauses et heure d'arrivée estimée",
+          "Météo de la destination",
+          "Mode hors ligne et historique",
+        ],
+      },
+      {
+        titre: "Espace Collaborateurs",
+        public: "Pour les équipes SNTL, avec permissions par rôle",
+        items: [
+          "Accès et actions limités selon le rôle",
+          "Gestion des codes PIN d'accès aux portails Client et Chauffeur",
+        ],
+        roles: [
+          "Centre Trafic",
+          "Agent Transport",
+          "Assistant Commercial",
+          "Directeur Régional",
+          "Direction Exploitation",
+        ],
+      },
+    ],
+    modules: [
+      {
+        titre: "Commandes et dispatch automatique",
+        items: [
+          "Calcul du nombre de camions selon la capacité (20 T, 12 T, 30 T)",
+          "Présélection des chauffeurs disponibles et répartition du tonnage",
+          "Coût et marge estimés avant validation : carburant, péages, frais de mission",
+          "Avis de non-réalisation d'une commande (FOR 030)",
+        ],
+      },
+      {
+        titre: "Bons de Transport",
+        items: [
+          "Génération automatique en 1 clic",
+          "QR code enrichi : BL, quantité, transporteur, véhicule, date, FR, BCH",
+          "11 statuts suivis et retour documentaire",
+          "Calcul de distance et d'heure d'arrivée, alerte de retard",
+          "Empreinte carbone du trajet sur la Feuille de Route (CO₂ aller chargé et retour à vide)",
+        ],
+      },
+      {
+        titre: "Suivi et pilotage",
+        items: [
+          "Tableau de bord temps réel (actualisé toutes les 10 s) avec score de performance /100",
+          "Carte interactive des camions (Leaflet / OpenStreetMap)",
+          "Vue Kanban par glisser-déposer",
+          "Planning hebdomadaire et historique complet des opérations",
+          "Rendement opérationnel : jauge du mois, saturation de la capacité, performance sur 4 semaines",
+        ],
+      },
+      {
+        titre: "Partenaires",
+        items: [
+          "Référentiel transporteurs avec statuts",
+          "Évaluation trimestrielle des transporteurs sur 5 critères",
+          "Comparateur de transporteurs avec score /100",
+          "Réclamations par niveau de gravité",
+          "Classement des chauffeurs",
+        ],
+      },
+      {
+        titre: "Finance",
+        items: [
+          "Grilles tarifaires par destination",
+          "Facturation mensuelle automatique (commissions, TVA)",
+          "Valorisation et marge par BT",
+          "Suivi des créances clients et des dettes transporteurs",
+          "Validation des paiements",
+        ],
+      },
+      {
+        titre: "Contrôle",
+        items: ["Checklist de 6 points par BT avant clôture"],
+      },
+      {
+        titre: "Outils",
+        items: [
+          "OCR des BT papier (Tesseract.js) avec score de confiance",
+          "Scanner QR (caméra ou image)",
+          "Export Excel",
+          "Recherche globale Ctrl+K et raccourcis clavier",
+          "Notifications temps réel et chat interne d'équipe",
+          "Mode sombre et guides d'aide intégrés",
+        ],
+      },
+    ],
+    processus: [
+      {
+        titre: "Processus métier digitalisé",
+        description: "Les 8 étapes du traitement d'une commande, de sa réception à son règlement.",
+        etapes: [
+          "Réception",
+          "Intégration",
+          "Affectation",
+          "Retour documentaire",
+          "Valorisation",
+          "Mise en lot",
+          "Contrôle",
+          "Règlement",
+        ],
+      },
+      {
+        titre: "Cycle chauffeur",
+        description: "Les 8 étapes validées par le chauffeur depuis son téléphone.",
+        etapes: [
+          "Début chargement",
+          "Chargement terminé",
+          "Départ",
+          "Arrivée",
+          "Déchargement transporteur",
+          "Réception client",
+          "Déchargement terminé",
+          "Livré",
+        ],
+      },
+    ],
+    documents: [
+      "Bon de Transport (avec QR code)",
+      "Feuille de Route (avec empreinte carbone)",
+      "Demande de Transport",
+      "Lettre de voiture CMR",
+      "État de répartition des transports",
+      "PV de constat d'incident",
+      "Déclaration d'assurance",
+      "Avis de non-réalisation",
+      "Facture mensuelle client",
+      "Rapport mensuel d'exploitation",
+      "Rapport mensuel des réclamations",
+      "Fiche d'évaluation transporteur",
+    ],
+    kpis: [
+      {
+        titre: "KPIs officiels",
+        items: [
+          "Taux de réalisation des commandes",
+          "Optimisation des flux",
+          "Taux de recouvrement",
+          "Délai de règlement",
+        ],
+      },
+      {
+        titre: "Indicateurs complémentaires",
+        items: ["Délai moyen de dispatch", "Commandes en retard", "Coût carburant", "Anomalies"],
+      },
+    ],
+    securite: [
+      "Sessions signées (cookie httpOnly)",
+      "API protégée",
+      "Mots de passe et codes PIN hachés (bcrypt)",
+      "Blocage après 5 tentatives",
+      "Secrets en variables d'environnement",
+      "Journal d'audit",
+    ],
+    pdca: [
+      {
+        phase: "Plan",
+        titre: "Planifier",
+        items: ["Charte de projet", "QQOQCP", "Diagnostic de l'existant", "Cahier des charges"],
+      },
+      {
+        phase: "Do",
+        titre: "Réaliser",
+        items: ["Développement des 3 portails et des modules", "Mise en production cloud"],
+      },
+      {
+        phase: "Check",
+        titre: "Vérifier",
+        items: [
+          "Comparaison avant / après",
+          "10 scénarios de test de bout en bout validés",
+          "Vérification de chaque rôle et de chaque document",
+          "Correction des anomalies",
+        ],
+      },
+      {
+        phase: "Act",
+        titre: "Améliorer",
+        items: [
+          "Standardisation du processus",
+          "Plan d'amélioration : GPS embarqué, notifications SMS / WhatsApp, application mobile, prévision de la demande par IA, connexion ERP",
+        ],
+      },
+    ],
+    fonctionnalites: [],
+    stack: [
+      "Next.js 16",
+      "React 19",
+      "TypeScript",
+      "Tailwind CSS v4",
+      "PostgreSQL",
+      "Prisma",
+      "Supabase",
+      "Vercel",
+      "Vercel Blob",
+      "Leaflet / OpenStreetMap",
+      "Tesseract.js (OCR)",
+      "SheetJS (Excel)",
+      "html5-qrcode / qrcode",
+      "bcrypt",
+      "API Open-Meteo",
+      "GitHub (déploiement continu)",
+    ],
+    etapes: [],
+    competences: [
+      "Analyse de processus logistiques",
+      "Modélisation d'un flux de transport",
+      "Conduite de projet (PDCA)",
+      "Développement full-stack",
+      "Bases de données relationnelles",
+      "Sécurité applicative",
+      "Mise en production cloud",
+      "Conception de KPI",
+    ],
+    bilan: "",
+    images: [
+      {
+        src: "/images/projets/tms-sntl/01-tableau-de-bord.webp",
+        alt: "Tableau de bord du TMS : score de performance globale de 78 sur 100 (taux de livraison, zéro anomalie, automatisation, réalisation des commandes) et barre de progression des Bons de Transport",
+        legende: "Tableau de bord temps réel : score de performance /100 et progression des Bons de Transport",
+      },
+      {
+        src: "/images/projets/tms-sntl/02-vue-kanban.webp",
+        alt: "Vue Kanban des Bons de Transport en colonnes Créés, En transit, Livrés, Validés et Anomalies, avec deux BT validés pour Atlas Transport et ANZA Logistique",
+        legende: "Vue Kanban : le statut d'un BT se met à jour par glisser-déposer",
+      },
+      {
+        src: "/images/projets/tms-sntl/03-historique.webp",
+        alt: "Historique des opérations : chronologie des étapes d'un BT (chargement terminé, départ, arrivée sur site, déchargements) avec filtres par type, période et transporteur, et bouton d'export Excel",
+        legende: "Historique : traçabilité complète des opérations, filtrable et exportable en Excel",
+      },
+    ],
+    lienGithub: "",
+    lienDemo: "",
+  },
+  {
     slug: "wms",
     titre: "Warehouse Management System (WMS)",
     categorie: "Académique",
@@ -735,40 +1098,6 @@ export const projets: Projet[] = [
     // TODO: captures d'écran (interface, MCD) dans public/images/projets/wms/
     images: [],
     // TODO: lien du dépôt GitHub et éventuelle démo en ligne
-    lienGithub: "",
-    lienDemo: "",
-  },
-  {
-    slug: "tms-sntl",
-    titre: "TMS & digitalisation des flux de transport",
-    categorie: "Professionnel",
-    contexte: "Stage d'application — SNTL, Agadir (2026)",
-    featured: true,
-    resume:
-      "Développement d'un TMS (Transport Management System) et digitalisation des flux de transport lors de mon stage à la SNTL.",
-    description:
-      "Projet réalisé pendant mon stage d'application à la Société Nationale de Transport et de Logistique (SNTL) à Agadir : développement d'un TMS et automatisation du suivi des commandes et du processus de transport.",
-    // TODO: préciser le contexte et le besoin (sans données confidentielles)
-    probleme: "Digitaliser les flux de transport et le suivi des commandes.",
-    // TODO: décrire l'architecture et le fonctionnement du TMS
-    solution:
-      "Développement d'un TMS permettant d'automatiser le suivi des commandes et du processus de transport.",
-    // TODO: résultat obtenu (sans chiffres confidentiels)
-    resultat: "",
-    // TODO: compléter la liste des fonctionnalités
-    fonctionnalites: [
-      "Automatisation du suivi des commandes",
-      "Suivi du processus de transport",
-    ],
-    // TODO: technologies utilisées
-    stack: [],
-    // TODO: étapes du projet
-    etapes: [],
-    competences: ["TMS", "Digitalisation", "Transport", "Automatisation", "Suivi des commandes"],
-    // TODO: ce que ce projet m'a apporté
-    bilan: "",
-    // TODO: captures anonymisées
-    images: [],
     lienGithub: "",
     lienDemo: "",
   },
@@ -1179,8 +1508,46 @@ export const ui = {
     etape: (n: number) => `Étape ${n}`,
     competences: "Compétences développées",
     navigation: "Navigation entre projets",
+
+    // Étude de cas détaillée
+    role: "Rôle",
+    periode: "Période",
+    problemeSolution: "Du problème à la solution",
+    chiffresCles: "Les chiffres clés",
+    chiffresSousTitre: "Mesurés lors des tests, avant et après la mise en place de l'application.",
+    avant: "Avant",
+    apres: "Après",
+    gain: "Gain",
+    portails: (portails: number, roles: number) =>
+      roles > 0 ? `${portails} portails, ${roles} rôles` : `${portails} portails`,
+    rolesTitre: "Rôles",
+    modules: "Fonctionnalités par module",
+    nombreFonctionnalites: (n: number) => `${n} fonctionnalité${n > 1 ? "s" : ""}`,
+    processus: "Processus digitalisés",
+    etapeSur: (n: number, total: number) => `Étape ${n} sur ${total}`,
+    documentsKpisSecurite: "Documents, KPIs et sécurité",
+    documents: (n: number) => `${n} documents générés automatiquement`,
+    kpis: "KPIs pilotés",
+    securite: "Sécurité",
+    pdca: "Méthodologie PDCA",
+    pdcaSousTitre: "Planifier, réaliser, vérifier, améliorer : la démarche d'amélioration continue appliquée au projet.",
+    chiffresCarte: "Chiffres clés du projet",
     precedent: "Projet précédent",
     suivant: "Projet suivant",
+
+    // Galerie de captures et affichage plein écran
+    galerie: {
+      /** Légende par défaut si le nom de fichier ne contient qu'un numéro (ex. « 01.png ») */
+      captureParDefaut: (titre: string, n: number) => `${titre} — capture ${n}`,
+      agrandir: (legende: string, n: number, total: number) =>
+        `Agrandir la capture ${n} sur ${total} : ${legende}`,
+      dialogue: (titre: string) => `Captures d'écran — ${titre}`,
+      fermer: "Fermer l'affichage plein écran",
+      precedente: "Capture précédente",
+      suivante: "Capture suivante",
+      compteur: (n: number, total: number) => `${n} / ${total}`,
+      compteurLecteur: (n: number, total: number) => `Capture ${n} sur ${total}`,
+    },
   },
 
   certifications: {

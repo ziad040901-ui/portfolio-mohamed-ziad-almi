@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { ui, type Projet } from "@/lib/data";
-import { fichierPublicExiste } from "@/lib/fichiers";
+import { imagesProjet } from "@/lib/images-projet";
 import Badge from "@/components/ui/Badge";
 import Card from "@/components/ui/Card";
 import VisuelProjet from "./VisuelProjet";
@@ -16,7 +16,8 @@ type ProjetCardProps = {
 };
 
 export default function ProjetCard({ projet, titreNiveau: Titre = "h3" }: ProjetCardProps) {
-  const image = projet.images.find((img) => fichierPublicExiste(img.src));
+  // Première capture du projet (déclarée ou détectée dans son dossier), sinon visuel de remplacement
+  const [image] = imagesProjet(projet);
   // Sans stack renseignée (ex. TMS en cours de rédaction), on montre les compétences
   const badges = (projet.stack.length > 0 ? projet.stack : projet.competences).slice(0, BADGES_MAX);
 
@@ -29,7 +30,7 @@ export default function ProjetCard({ projet, titreNiveau: Titre = "h3" }: Projet
             alt={image.alt}
             fill
             sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
-            className="object-cover"
+            className="object-cover object-left-top"
           />
         ) : (
           <VisuelProjet projet={projet} />
@@ -53,6 +54,17 @@ export default function ProjetCard({ projet, titreNiveau: Titre = "h3" }: Projet
         </Titre>
 
         <p className="mt-3 flex-1 leading-relaxed text-muted-foreground">{projet.resume}</p>
+
+        {projet.chiffresCarte && projet.chiffresCarte.length > 0 && (
+          <dl aria-label={ui.projets.chiffresCarte} className="mt-5 grid grid-cols-2 gap-3">
+            {projet.chiffresCarte.map((c) => (
+              <div key={c.label} className="flex flex-col-reverse rounded-button border border-border bg-muted px-3 py-2.5">
+                <dt className="text-xs leading-snug text-muted-foreground">{c.label}</dt>
+                <dd className="font-heading text-xl font-bold text-accent-strong">{c.valeur}</dd>
+              </div>
+            ))}
+          </dl>
+        )}
 
         {badges.length > 0 && (
           <ul className="mt-5 flex flex-wrap gap-2">

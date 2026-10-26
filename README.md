@@ -51,6 +51,7 @@ components/
 lib/
 ├── data.ts                 # ★ TOUT le contenu du site
 ├── seo.ts                  # metadataPage() : metadata d'une page (titre, OG, Twitter)
+├── images-projet.ts        # Captures d'un projet : déclarées dans data.ts ou détectées dans son dossier
 ├── format.ts               # Dates, durées, initiales
 ├── marque.ts               # Couleurs pour les images générées (copie des tokens CSS)
 assets/fonts/               # Polices TTF pour les images générées (licence SIL OFL)
@@ -71,6 +72,7 @@ public/
 | Compétences, langues | `competences`, `langues` (niveau `score` de 1 à 5) |
 | Ajouter une certification | `certifications` (le bouton « Vérifier le certificat » apparaît si `lienVerification` est rempli) |
 | Ajouter un projet | `projets` : sa page `/projects/<slug>` est créée automatiquement ; `featured: true` l'affiche sur l'accueil ; l'ordre du tableau est l'ordre d'affichage |
+| Étude de cas détaillée d'un projet (exemple complet : `tms-sntl`) | champs facultatifs du projet : `role`, `periode`, `problemePoints`, `chiffres` (avant → après), `chiffresCarte` (2 chiffres sur la carte), `portails`, `modules`, `processus`, `documents`, `kpis`, `securite`, `pdca`. Chaque section n'apparaît que si son champ est rempli |
 | Textes d'interface (boutons, titres de section…) | `ui` |
 | Mots-clés, descriptions des pages | `seo` |
 | URL du site (nom de domaine) | `site.url` |
@@ -82,7 +84,16 @@ Les champs vides (`""` ou `[]`) ne sont pas affichés : on peut compléter un pr
 ### Images
 
 - **Photo de profil** : déposer `public/images/profile.jpg` (carrée, 480 × 480 px minimum). Tant qu'elle est absente, le monogramme « MZA » s'affiche.
-- **Captures de projet** : déposer les fichiers dans `public/images/projets/<slug>/`, puis les déclarer dans `images` du projet (`src`, `alt`, `legende`). Sans image, un visuel de remplacement est affiché.
+- **Captures de projet** : il suffit de déposer les fichiers dans `public/images/projets/<slug>/` (ex. `public/images/projets/tms-sntl/`), rien d'autre à modifier :
+  - formats acceptés : `.png`, `.jpg`, `.jpeg`, `.webp` ;
+  - ordre d'affichage = ordre des noms de fichier : préfixer par un numéro (`01-…`, `02-…`, `10-…` est bien rangé après `9-…`) ;
+  - la légende et le texte alternatif sont déduits du nom : `01-tableau-de-bord.png` → « Tableau de bord » (numéro retiré, tirets et `_` remplacés par des espaces, majuscule initiale ; les accents sont permis : `02-répartition-des-tournées.png`) ;
+  - la première capture devient le visuel de la carte du projet (accueil et `/projects`) ; sur la page du projet, elle s'affiche en grand, les autres en vignettes, et un clic ouvre l'affichage plein écran ;
+  - pour personnaliser une légende ou un texte alternatif, déclarer les images dans `images` du projet (`src`, `alt`, `legende`) : cette liste est alors prioritaire sur le dossier ;
+  - dossier vide : visuel de remplacement (icône du projet) ;
+  - la grande image garde ses proportions réelles (lues dans le fichier) : une capture très large n'est pas rognée ;
+  - conseillé : WebP, 1600 px de large au maximum, moins de 300 Ko.
+- Les images sont lues **au build** : après en avoir ajouté, relancer `npm run dev` n'est pas nécessaire (un rechargement de la page suffit), mais un commit + push est nécessaire pour les publier.
 - **CV** : remplacer `public/CV.pdf`.
 
 ## Design system et règles

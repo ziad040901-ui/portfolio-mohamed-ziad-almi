@@ -113,6 +113,16 @@
   /* Largeur du contenu */
   --container-content: 72rem;
 
+  /* Ouverture de la lightbox (utilisée avec motion-safe:) */
+  --animate-lightbox: lightbox-entree 180ms ease-out;
+
+  @keyframes lightbox-entree {
+    from {
+      opacity: 0;
+      transform: scale(0.97);
+    }
+  }
+
   /* Flux qui circulent sur les routes du motif de fond (hero) */
   --animate-flow: flow 2.5s linear infinite;
 

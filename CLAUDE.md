@@ -36,6 +36,9 @@
 - **Composants serveur par défaut.** `"use client"` uniquement si le composant utilise un état, un effet, un gestionnaire d'événement ou une API navigateur ; isoler la partie interactive dans le plus petit composant possible.
 - **Liens internes avec `next/link`** (le composant `Button` le fait automatiquement pour les routes internes). `<a>` uniquement pour les liens externes, `mailto:`, `tel:` et les fichiers statiques (`/CV.pdf`).
 - **Images avec `next/image`**, avec `alt` descriptif (ou `alt=""` si purement décorative).
+- **Captures de projet : toujours passer par `imagesProjet(projet)`** (`lib/images-projet.ts`, serveur uniquement). Ordre de priorité : images déclarées dans `projet.images` (et présentes dans `public/`), sinon fichiers png/jpg/jpeg/webp de `public/images/projets/<slug>/` triés par nom, alt et légende déduits du nom de fichier. Tableau vide → `VisuelProjet`. La galerie plein écran (`components/projets/GalerieProjet.tsx`) reçoit des libellés déjà calculés côté serveur.
+- **Étude de cas** : les sections riches de `/projects/[slug]` (chiffres avant → après, portails, modules, processus, documents / KPIs / sécurité, PDCA) sont dans `components/projets/EtudeDeCas.tsx` et dépendent de champs **facultatifs** du type `Projet`. Toute nouvelle section doit être masquée si son champ est vide, pour ne pas casser les autres projets.
+- **Chiffres d'un projet** : ne présenter que ce qui est réellement fonctionnel dans le code du projet (pas de fonctionnalité orpheline ou désactivée), et garder un même chiffre cohérent partout (carte, chiffres clés, listes).
 - Alias d'import : `@/` → racine du projet.
 - **Metadata d'une page : `metadataPage({ titre, description, chemin })`** (`lib/seo.ts`). La fusion des metadata étant superficielle, un `openGraph` défini dans une page remplace celui du layout, image comprise : ne pas écrire `openGraph` à la main.
 

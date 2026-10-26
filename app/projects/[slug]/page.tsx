@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
@@ -15,7 +14,7 @@ import {
 } from "lucide-react";
 import { projets, ui, type Projet } from "@/lib/data";
 import { emojisDecoratifs } from "@/lib/emojis";
-import { fichierPublicExiste } from "@/lib/fichiers";
+import { imagesProjet } from "@/lib/images-projet";
 import { metadataPage } from "@/lib/seo";
 import { cn } from "@/lib/utils";
 import Badge from "@/components/ui/Badge";
@@ -24,6 +23,15 @@ import Card from "@/components/ui/Card";
 import Container from "@/components/ui/Container";
 import { GitHubIcon } from "@/components/icons/BrandIcons";
 import VisuelProjet from "@/components/projets/VisuelProjet";
+import GalerieProjet from "@/components/projets/GalerieProjet";
+import {
+  ChiffresAvantApres,
+  DocumentsKpisSecurite,
+  ModulesAccordeon,
+  PdcaBlocs,
+  PortailsCartes,
+  ProcessusFrise,
+} from "@/components/projets/EtudeDeCas";
 import Apparition from "@/components/motion/Apparition";
 import { Cascade, CascadeItem } from "@/components/motion/Cascade";
 
@@ -53,16 +61,32 @@ export default async function ProjetPage(props: PageProps<"/projects/[slug]">) {
   const suivant = projets[index + 1];
   const t = ui.projets;
 
-  const images = projet.images.filter((img) => fichierPublicExiste(img.src));
+  // Captures : lib/data.ts en priorité, sinon détectées dans public/images/projets/<slug>/
+  const tg = t.galerie;
+  const images = imagesProjet(projet).map((img, i, liste) => ({
+    ...img,
+    agrandir: tg.agrandir(img.legende || img.alt, i + 1, liste.length),
+    compteur: tg.compteur(i + 1, liste.length),
+    compteurLecteur: tg.compteurLecteur(i + 1, liste.length),
+  }));
 
-  // Champs vides (ex. TODO du TMS) : la carte n'est simplement pas rendue
+  // Champs vides : la carte n'est simplement pas rendue
   const enBref = (
     [
-      { titre: t.probleme, texte: projet.probleme, Icone: CircleAlert },
-      { titre: t.solution, texte: projet.solution, Icone: Lightbulb },
-      { titre: t.resultat, texte: projet.resultat, Icone: Trophy },
-    ] satisfies { titre: string; texte: string; Icone: LucideIcon }[]
+      { titre: t.probleme, texte: projet.probleme, points: projet.problemePoints ?? [], Icone: CircleAlert },
+      { titre: t.solution, texte: projet.solution, points: [], Icone: Lightbulb },
+      { titre: t.resultat, texte: projet.resultat, points: [], Icone: Trophy },
+    ] satisfies { titre: string; texte: string; points: string[]; Icone: LucideIcon }[]
   ).filter((bloc) => bloc.texte);
+
+  const chiffres = projet.chiffres ?? [];
+  const portails = projet.portails ?? [];
+  const nombreRoles = portails.reduce((n, p) => n + (p.roles?.length ?? 0), 0);
+  const modules = projet.modules ?? [];
+  const processus = projet.processus ?? [];
+  const pdca = projet.pdca ?? [];
+  const aDocumentsKpisSecurite =
+    (projet.documents?.length ?? 0) + (projet.kpis?.length ?? 0) + (projet.securite?.length ?? 0) > 0;
 
   return (
     <article>
@@ -83,6 +107,23 @@ export default async function ProjetPage(props: PageProps<"/projects/[slug]">) {
           </div>
 
           <h1 className="mt-4 max-w-4xl text-3xl font-bold text-foreground sm:text-5xl">{projet.titre}</h1>
+
+          {(projet.role || projet.periode) && (
+            <dl className="mt-5 flex max-w-4xl flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-x-8">
+              {projet.role && (
+                <div>
+                  <dt className="text-xs font-semibold tracking-wide text-accent-strong uppercase">{t.role}</dt>
+                  <dd className="mt-0.5 font-medium text-foreground">{projet.role}</dd>
+                </div>
+              )}
+              {projet.periode && (
+                <div>
+                  <dt className="text-xs font-semibold tracking-wide text-accent-strong uppercase">{t.periode}</dt>
+                  <dd className="mt-0.5 font-medium whitespace-nowrap text-foreground">{projet.periode}</dd>
+                </div>
+              )}
+            </dl>
+          )}
 
           <p className="mt-5 max-w-3xl text-lg leading-relaxed text-pretty text-muted-foreground">
             {projet.description}
@@ -149,28 +190,15 @@ export default async function ProjetPage(props: PageProps<"/projects/[slug]">) {
             {t.apercu}
           </h2>
           {images.length > 0 ? (
-            <div className="grid gap-4 sm:grid-cols-2">
-              {images.map((img, i) => (
-                <figure
-                  key={img.src}
-                  className={cn("overflow-hidden rounded-card border border-border bg-card shadow-card", i === 0 && "sm:col-span-2")}
-                >
-                  <div className="relative aspect-video">
-                    <Image
-                      src={img.src}
-                      alt={img.alt}
-                      fill
-                      sizes={i === 0 ? "(min-width: 1152px) 1152px, 100vw" : "(min-width: 640px) 50vw, 100vw"}
-                      preload={i === 0}
-                      className="object-cover"
-                    />
-                  </div>
-                  {img.legende && (
-                    <figcaption className="px-4 py-3 text-sm text-muted-foreground">{img.legende}</figcaption>
-                  )}
-                </figure>
-              ))}
-            </div>
+            <GalerieProjet
+              images={images}
+              libelles={{
+                dialogue: tg.dialogue(projet.titre),
+                fermer: tg.fermer,
+                precedente: tg.precedente,
+                suivante: tg.suivante,
+              }}
+            />
           ) : (
             <div className="aspect-[4/3] overflow-hidden rounded-card border border-border shadow-card sm:aspect-video lg:aspect-[21/9]">
               <VisuelProjet projet={projet} variante="grand" />
@@ -178,11 +206,19 @@ export default async function ProjetPage(props: PageProps<"/projects/[slug]">) {
           )}
         </section>
 
+        {/* ---------- Chiffres clés (avant → après) ---------- */}
+        {chiffres.length > 0 && (
+          <BlocEtude id="chiffres" titre={t.chiffresCles} sousTitre={t.chiffresSousTitre}>
+            <ChiffresAvantApres chiffres={chiffres} />
+          </BlocEtude>
+        )}
+
         {/* ---------- Problème → Solution → Résultat ---------- */}
         {enBref.length > 0 && (
-          <BlocEtude id="en-bref" titre={t.enBref}>
+          // « Du problème à la solution » réservé aux études de cas détaillées (problème en points)
+          <BlocEtude id="en-bref" titre={projet.problemePoints?.length ? t.problemeSolution : t.enBref}>
             <Cascade as="ol" className={cn("grid gap-6", colonnes[enBref.length])}>
-              {enBref.map(({ titre, texte, Icone }) => (
+              {enBref.map(({ titre, texte, points, Icone }) => (
                 <CascadeItem key={titre}>
                   <Card className="h-full">
                     <span className="mb-4 flex size-11 items-center justify-center rounded-button bg-accent/15 text-accent-strong">
@@ -190,10 +226,31 @@ export default async function ProjetPage(props: PageProps<"/projects/[slug]">) {
                     </span>
                     <h3 className="text-lg font-semibold text-foreground">{titre}</h3>
                     <p className="mt-2 leading-relaxed text-muted-foreground">{texte}</p>
+                    {points.length > 0 && (
+                      <ul className="mt-4 list-disc space-y-2 pl-5 leading-relaxed text-muted-foreground marker:text-accent">
+                        {points.map((point) => (
+                          <li key={point}>{point}</li>
+                        ))}
+                      </ul>
+                    )}
                   </Card>
                 </CascadeItem>
               ))}
             </Cascade>
+          </BlocEtude>
+        )}
+
+        {/* ---------- Portails et rôles ---------- */}
+        {portails.length > 0 && (
+          <BlocEtude id="portails" titre={t.portails(portails.length, nombreRoles)}>
+            <PortailsCartes portails={portails} />
+          </BlocEtude>
+        )}
+
+        {/* ---------- Fonctionnalités par module ---------- */}
+        {modules.length > 0 && (
+          <BlocEtude id="modules" titre={t.modules}>
+            <ModulesAccordeon modules={modules} />
           </BlocEtude>
         )}
 
@@ -254,6 +311,31 @@ export default async function ProjetPage(props: PageProps<"/projects/[slug]">) {
           </BlocEtude>
         )}
 
+        {/* ---------- Processus en frise ---------- */}
+        {processus.length > 0 && (
+          <BlocEtude id="processus" titre={t.processus}>
+            <div className="space-y-12">
+              {processus.map((p) => (
+                <ProcessusFrise key={p.titre} processus={p} />
+              ))}
+            </div>
+          </BlocEtude>
+        )}
+
+        {/* ---------- Documents, KPIs, sécurité ---------- */}
+        {aDocumentsKpisSecurite && (
+          <BlocEtude id="documents" titre={t.documentsKpisSecurite}>
+            <DocumentsKpisSecurite documents={projet.documents} kpis={projet.kpis} securite={projet.securite} />
+          </BlocEtude>
+        )}
+
+        {/* ---------- Méthodologie PDCA ---------- */}
+        {pdca.length > 0 && (
+          <BlocEtude id="pdca" titre={t.pdca} sousTitre={t.pdcaSousTitre}>
+            <PdcaBlocs phases={pdca} />
+          </BlocEtude>
+        )}
+
         {/* ---------- Compétences développées ---------- */}
         {(projet.competences.length > 0 || projet.bilan) && (
           <BlocEtude id="competences" titre={t.competences}>
@@ -293,14 +375,17 @@ export default async function ProjetPage(props: PageProps<"/projects/[slug]">) {
   );
 }
 
-function BlocEtude({ id, titre, children }: { id: string; titre: string; children: React.ReactNode }) {
+type BlocEtudeProps = { id: string; titre: string; sousTitre?: string; children: React.ReactNode };
+
+function BlocEtude({ id, titre, sousTitre, children }: BlocEtudeProps) {
   return (
     <section aria-labelledby={`${id}-titre`}>
       <Apparition>
-        <h2 id={`${id}-titre`} className="mb-6 text-2xl font-bold text-foreground sm:text-3xl">
+        <h2 id={`${id}-titre`} className="text-2xl font-bold text-foreground sm:text-3xl">
           {titre}
         </h2>
-        {children}
+        {sousTitre && <p className="mt-2 max-w-3xl text-muted-foreground">{sousTitre}</p>}
+        <div className="mt-6">{children}</div>
       </Apparition>
     </section>
   );

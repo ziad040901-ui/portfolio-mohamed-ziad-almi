@@ -37,7 +37,10 @@ export default function ExperienceCard({ experience: exp, detaille = false }: Ex
                 {exp.type} · {exp.lieu}
               </p>
             </div>
-            <Badge variant="outline">{exp.domaine}</Badge>
+            <div className="flex flex-wrap gap-2">
+              {exp.enCours && <Badge variant="accent">{ui.parcours.experiences.enCours}</Badge>}
+              <Badge variant="outline">{exp.domaine}</Badge>
+            </div>
           </div>
 
           <p className="mt-2 text-sm font-medium text-accent-strong">

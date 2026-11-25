@@ -46,6 +46,8 @@ export type Experience = {
   type: TypeStage;
   debut: DateISO;
   fin: DateISO;
+  /** Vrai tant que le stage est en cours (badge affiché) */
+  enCours?: boolean;
   domaine: string;
   missions: string[];
   resultats?: string[];
@@ -284,6 +286,7 @@ export const experiences: Experience[] = [
     type: "Stage en alternance",
     debut: "2026-10-30",
     fin: "2027-01-30",
+    enCours: true,
     domaine: "Digitalisation entrepôt",
     missions: [
       "Développement d'un jumeau numérique 3D des entrepôts (React, Three.js)",
@@ -1452,6 +1455,7 @@ export const ui = {
       missions: "Missions",
       competences: "Compétences mobilisées",
       resultats: "Résultats",
+      enCours: "En cours",
     },
     formation: {
       eyebrow: "Formation",

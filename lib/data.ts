@@ -33,7 +33,7 @@ export type Profil = {
   cv: string;
 };
 
-export type TypeStage = "Stage d'application" | "Stage d'observation";
+export type TypeStage = "Stage d'application" | "Stage d'observation" | "Stage en alternance";
 
 export type Experience = {
   slug: string;
@@ -261,7 +261,7 @@ export const profil: Profil = {
   recherche:
     "Stage de fin d'études (PFE) en supply chain, transport ou digitalisation logistique",
   resume:
-    "Étudiant en 2e année de Master E-Logistique (Bac+5) à l'ESITH Casablanca. Quatre stages en logistique portuaire, gestion des stocks, distribution et transport (SMA, Marsa Maroc, Coca-Cola, SNTL), dont le développement d'un TMS et la digitalisation des flux de transport. Formation complémentaire en Excel, Power BI, Python et bases de données.",
+    "Étudiant en 2e année de Master E-Logistique (Bac+5) à l'ESITH Casablanca. Alternance en cours chez La Voie Express (jumeau numérique 3D des entrepôts) après quatre stages en logistique portuaire, gestion des stocks, distribution et transport (SMA, Marsa Maroc, Coca-Cola, SNTL), dont le développement d'un TMS. Formation complémentaire en Excel, Power BI, Python et bases de données.",
   localisation: "Casablanca, Maroc",
   email: "mohamedziadalmi@gmail.com",
   telephone: "+212 7 67 30 71 04",
@@ -276,6 +276,23 @@ export const profil: Profil = {
 // ===================================================================
 
 export const experiences: Experience[] = [
+  {
+    slug: "voie-express",
+    entreprise: "La Voie Express Group",
+    monogramme: "LVE",
+    lieu: "Casablanca",
+    type: "Stage en alternance",
+    debut: "2026-10-30",
+    fin: "2027-01-30",
+    domaine: "Digitalisation entrepôt",
+    missions: [
+      "Développement d'un jumeau numérique 3D des entrepôts (React, Three.js)",
+      "Vue 3D de l'occupation des emplacements avec code couleur en temps réel",
+      "Simulation d'une journée : préparateurs, caristes et camions",
+    ],
+    resultats: [],
+    competences: ["React", "Three.js", "Jumeau numérique", "Entreposage"],
+  },
   {
     slug: "sntl",
     entreprise: "Société Nationale de Transport et de Logistique",
@@ -472,13 +489,14 @@ export const competences: CategorieCompetence[] = [
       "traçabilité",
       "analyse et optimisation des processus",
       "amélioration continue",
+      "Lean Six Sigma",
       "manutention portuaire",
     ],
   },
   {
     slug: "data-digital",
     titre: "Data & Digital",
-    items: ["TMS", "WMS", "Excel", "Power BI", "Python", "SQL / MySQL", "Merise", "Intelligence artificielle"],
+    items: ["SAP (ERP)", "TMS", "WMS", "Excel", "Power BI", "Python", "SQL / MySQL", "Merise", "Intelligence artificielle"],
   },
   {
     slug: "developpement",
@@ -544,6 +562,26 @@ export const certifications: Certification[] = [
     date: "2025-10",
     lienVerification: "https://www.coursera.org/account/accomplishments/badge/_m5k9TjRTAquZPU40fwKEA",
     competences: ["Intelligence artificielle", "Python", "Applications IA"],
+  },
+  {
+    titre: "SAP Professional Fundamentals",
+    type: "cours",
+    organisme: "SAP",
+    plateforme: "Coursera",
+    categorie: "Supply Chain & Gestion",
+    date: "2026-11",
+    lienVerification: "https://www.coursera.org/account/accomplishments/verify/TFQ2KA2F7EO4",
+    competences: ["SAP", "ERP", "Processus métier"],
+  },
+  {
+    titre: "Lean Six Sigma - Yellow Belt",
+    type: "cours",
+    organisme: "Packt",
+    plateforme: "Coursera",
+    categorie: "Supply Chain & Gestion",
+    date: "2026-11",
+    lienVerification: "https://www.coursera.org/account/accomplishments/verify/ZML3AFI1F1WX",
+    competences: ["Lean", "Six Sigma", "Amélioration continue", "Qualité"],
   },
   {
     titre: "Supply Chain Excellence",
@@ -709,10 +747,10 @@ export const certifications: Certification[] = [
 
 /** Certificats de cours affichés sur l'accueil (en plus des certificats professionnels), dans cet ordre */
 export const certificationsCoursAccueil = [
+  "SAP Professional Fundamentals",
+  "Lean Six Sigma - Yellow Belt",
   "Supply Chain Excellence",
   "Data Analysis and Visualization with Power BI",
-  "Python for Data Science, AI & Development",
-  "Excel Skills for Business: Essentials",
 ];
 
 // ===================================================================
@@ -1262,7 +1300,7 @@ const formationEnCours = formations.find((f) => f.enCours);
 const nombreCertificatsProfessionnels = certifications.filter((c) => c.type === "professionnel").length;
 
 export const chiffresCles: ChiffreCle[] = [
-  { slug: "stages", valeur: String(experiences.length), label: "stages" },
+  { slug: "stages", valeur: String(experiences.length), label: "expériences", detail: "dont 4 stages" },
   {
     slug: "certifications",
     valeur: String(certifications.length),
@@ -1341,7 +1379,7 @@ export const seo = {
   imagePartage: {
     alt: `${profil.nom} — Étudiant en Master 2 E-Logistique, Supply Chain × Digital`,
     signature: "Supply Chain × Digital",
-    recherche: "Disponible pour un stage PFE",
+    recherche: "Disponible pour un PFE de 4 mois — février 2027",
   },
   description:
     "Portfolio de Mohamed Ziad Almi, étudiant en Master 2 E-Logistique : supply chain, transport et digitalisation logistique. À la recherche d'un stage PFE.",
@@ -1412,7 +1450,7 @@ export const ui = {
       eyebrow: "Expériences",
       titre: "Expériences professionnelles",
       sousTitre:
-        "Quatre stages entre 2023 et 2026, du terminal portuaire à la digitalisation du transport.",
+        "Quatre stages entre 2023 et 2026 et une alternance en cours, du terminal portuaire à la digitalisation du transport.",
       missions: "Missions",
       competences: "Compétences mobilisées",
       resultats: "Résultats",
@@ -1588,7 +1626,7 @@ export const ui = {
   },
 
   accueil: {
-    disponibilite: "Disponible pour un stage PFE",
+    disponibilite: "Disponible pour un PFE de 4 mois — février 2027",
     voirProjets: "Voir mes projets",
     telechargerCv: "Télécharger mon CV",
     chiffresCles: "Chiffres clés",
@@ -1597,7 +1635,7 @@ export const ui = {
       eyebrow: "Parcours",
       titre: "Expériences terrain",
       sousTitre:
-        "Quatre stages, du port à la distribution, jusqu'à la digitalisation du transport.",
+        "Quatre stages (SMA, Marsa Maroc, Coca-Cola, SNTL) et une alternance en cours chez La Voie Express.",
       lien: "Voir tout mon parcours",
     },
     projets: {
